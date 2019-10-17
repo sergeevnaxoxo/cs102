@@ -1,42 +1,36 @@
-def encrypt_vigenere(plaintext: str, keyword: str) -> str:
+def encrypt_vigenere(plaintext, keyword):
     """
     Encrypts plaintext using a Vigenere cipher.
     >>> encrypt_vigenere("PYTHON", "A")
     'PYTHON'
-     >>> encrypt_vigenere("python", "a")
-        'python'
+    >>> encrypt_vigenere("python", "a")
+    'python'
     >>> encrypt_vigenere("ATTACKATDAWN", "LEMON")
     'LXFOPVEFRNHR'
     """
-    # PUT YOUR CODE HERE
+    ciphertext = ''
+    for index, char in enumerate(plaintext):
+        sub = char
 
-    ciphertext = " "
-    keyword = keyword.lower()
-    code_a = ord('a')
-    code_A = ord('A')
-    if code_a > code_A:
-        m = code_a
-    else:
-        m = code_A
+        if 'A' <= char <= 'z':
+            change = ord(keyword[index % len(keyword)])
+            change -= ord('a') if 'a' <= char <= 'z' else ord('A')
 
-    while len(plaintext) > len(keyword):
-        keyword += keyword
-    for i, j in enumerate(plaintext):
-        if 'a' <= j <= 'z':
-            key = (ord(keyword[i % len(keyword)]) - m) % 26
-            mid = (ord(j) + key - code_a) % 26 + code_a
-            ciphertext += chr(mid)
-        elif 'A' <= j <= 'Z':
-            key = (ord(keyword[i % len(keyword)]) - m) % 26
-            mid = (ord(j) + key - code_A) % 26 + code_A
-            ciphertext += chr(mid)
-        else:
-            ciphertext += j
+            symbol = ord(char) + change
+
+            if 'a' <= char <= 'z' and symbol > ord('z'):
+                symbol -= 26
+
+            elif 'A' <= char <= 'Z' and symbol > ord('Z'):
+                symbol -= 26
+
+            sub = chr(symbol)
+        ciphertext += sub
 
     return ciphertext
 
 
-def decrypt_vigenere(ciphertext: str, keyword: str) -> str:
+def decrypt_vigenere(ciphertext, keyword):
     """
     Decrypts a ciphertext using a Vigenere cipher.
     >>> decrypt_vigenere("PYTHON", "A")
@@ -46,30 +40,23 @@ def decrypt_vigenere(ciphertext: str, keyword: str) -> str:
     >>> decrypt_vigenere("LXFOPVEFRNHR", "LEMON")
     'ATTACKATDAWN'
     """
-    # PUT YOUR CODE HERE
+    plaintext = ''
+    for index, char in enumerate(ciphertext):
+        sub = char
 
-    plaintext = " "
-    keyword = keyword.lower()
-    code_a = ord('a')
-    code_A = ord('A')
-    if code_a > code_A:
-        m = code_a
-    else:
-        m = code_A
+        if 'A' <= char <= 'z':
+            change = ord(keyword[index % len(keyword)])
+            change -= ord('a') if 'a' <= char <= 'z' else ord('A')
 
-    while len(ciphertext) > len(keyword):
-        keyword += keyword
-    ss = len(ciphertext) // len(keyword)
-    for i, j in enumerate(ciphertext):
-        if 'a' <= j <= 'z':
-            key = (ord(keyword[i % len(keyword)]) - m) % 26
-            mid = (ord(j) - key - code_a) % 26 + code_a
-            plaintext += chr(mid)
-        elif 'A' <= j <= 'Z':
-            key = (ord(keyword[i % len(keyword)]) - m) % 26
-            mid = (ord(j) - key - code_A) % 26 + code_A
-            plaintext += chr(mid)
-        else:
-            plaintext += j
+            symbol = ord(char) - change
+
+            if 'a' <= char <= 'z' and symbol < ord('a'):
+                symbol += 26
+
+            elif 'A' <= char <= 'Z' and symbol < ord('A'):
+                symbol += 26
+
+            sub = chr(symbol)
+        plaintext += sub
 
     return plaintext
