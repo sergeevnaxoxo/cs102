@@ -1,7 +1,7 @@
 import random
 
 
-def is_prime(n) -> bool:
+def is_prime(n):
     """
     Tests to see if a number is prime.
     >>> is_prime(2)
@@ -11,22 +11,19 @@ def is_prime(n) -> bool:
     >>> is_prime(8)
     False
     """
-    # PUT YOUR CODE HERE
-    if n <= 1:
-        return False
-    if n <= 3:
-        return True
-    if n % 2 == 0:
-        return False
-    i = 5
-    while i * i <= n:
-        if n % i == 0:
+    if n > 1:
+        if (n > 2 & n % 2 == 0):
             return False
-        i += 2
-    return True
+        for i in range(2, round(n ** 0.5)):
+            if (n % i) == 0:
+                return False
+        else:
+            return True
+
+    return False
 
 
-def gcd(a, b) -> int:
+def gcd(a, b):
     """
     Euclid's algorithm for determining the greatest common divisor.
     >>> gcd(12, 15)
@@ -34,40 +31,38 @@ def gcd(a, b) -> int:
     >>> gcd(3, 7)
     1
     """
-    # PUT YOUR CODE HERE
-    while a != 0 and b != 0:
-        if a > b:
-            a %= b
-        else:
-            b %= a
-    return (max(a, b))
+    while b != 0:
+        a, b = b, a % b
+    return a
 
 
-def multiplicative_inverse(e: int, phi: int) -> int:
+def multiplicative_inverse(e, phi):
     """
     Euclid's extended algorithm for finding the multiplicative
     inverse of two numbers.
     >>> multiplicative_inverse(7, 40)
     23
     """
-    # PUT YOUR CODE HERE
-    b = e
-    a = phi
-    mass = []
-    x = 0
-    y = 1
-    while a % b != 0:
-        mass.append(a // b)
-        z = a
-        a = b
-        b = z % b
+    length = 1
+    dt = [[phi, e, phi % e, phi // e]]
 
-    for i in range(len(mass[::-1])):
-        z = x
-        x = y
-        y = z - y * mass[i]
-    phi = y % phi
-    return phi
+    while dt[-1][2]:
+        phi, e = e, dt[-1][2]
+        dt.append([
+            phi, e, phi % e, phi // e
+        ])
+        length += 1
+
+    dt[-1].append(0)
+    dt[-1].append(1)
+
+    for i in range(length - 2, -1, -1):
+        x, y = dt[i + 1][-2], dt[i + 1][-1]
+        dt[i].extend([
+            y, x - y * dt[i][3]
+        ])
+
+    return dt[0][-1] % dt[0][0]
 
 
 def generate_keypair(p, q):
@@ -76,11 +71,9 @@ def generate_keypair(p, q):
     elif p == q:
         raise ValueError('p and q cannot be equal')
 
-    # n = pq
-    # PUT YOUR CODE HERE
+    n = p * q
 
-    # phi = (p-1)(q-1)
-    # PUT YOUR CODE HERE
+    phi = (p - 1) * (q - 1)
 
     # Choose an integer e such that e and phi(n) are coprime
     e = random.randrange(1, phi)
@@ -96,7 +89,7 @@ def generate_keypair(p, q):
 
     # Return public and private keypair
     # Public key is (e, n) and private key is (d, n)
-    return ((e, n), (d, n))
+    return (e, n), (d, n)
 
 
 def encrypt(pk, plaintext):
@@ -131,4 +124,4 @@ if __name__ == '__main__':
     print(''.join(map(lambda x: str(x), encrypted_msg)))
     print("Decrypting message with public key ", public, " . . .")
     print("Your message is:")
-    print(decrypt(public, encrypted_msg))
+    print(decrypt(public, encrypted_m))
