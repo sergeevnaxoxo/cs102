@@ -29,7 +29,7 @@ def group(values: List[str], n: int) -> List[List[str]]:
     >>> group([1,2,3,4,5,6,7,8,9], 3)
     [[1, 2, 3], [4, 5, 6], [7, 8, 9]]
     """
-    return [[values[rows + i] for i in range(n)] for rows in range(0, values.__len__(), n)]
+    return [[values[rows + i] for i in range(n)] for rows in range(0, values.len(), n)]
 
 
 def get_row(grid: List[List[str]], pos: Tuple[int, int]) -> List[str]:
@@ -55,7 +55,7 @@ def get_col(grid: List[List[str]], pos: Tuple[int, int]) -> List[str]:
     >>> get_col([['1', '2', '3'], ['4', '5', '6'], ['.', '8', '9']], (0, 2))
     ['3', '6', '9']
     """
-    return [grid[col_ind][pos[1]] for col_ind in range(grid.__len__())]
+    return [grid[col_ind][pos[1]] for col_ind in range(grid.len())]
 
 
 def get_block(grid: List[List[str]], pos: Tuple[int, int]) -> List[str]:
@@ -84,8 +84,8 @@ def find_empty_positions(grid: List[List[str]]) -> Optional[Tuple[int, int]]:
     >>> find_empty_positions([['1', '2', '3'], ['4', '5', '6'], ['.', '8', '9']])
     (2, 0)
     """
-    for row_i in range(grid.__len__()):
-        for col_i in range(grid.__len__()):
+    for row_i in range(grid.len()):
+        for col_i in range(grid.len()):
             if grid[row_i][col_i] == '.':
                 return row_i, col_i
 
@@ -135,8 +135,8 @@ def solve(grid: List[List[str]]) -> Optional[List[List[str]]]:
 def check_solution(solution: List[List[str]]) -> bool:
     """ Если решение solution верно, то вернуть True, в противном случае False """
     nums = {str(i) for i in range(1, 10)}
-    if all(set(get_row(solution, (row_i, 0))) == nums for row_i in range(solution.__len__())) and \
-            all(set(get_row(solution, (0, col_i))) == nums for col_i in range(solution[0].__len__())) and \
+    if all(set(get_row(solution, (row_i, 0))) == nums for row_i in range(solution.len())) and \
+            all(set(get_row(solution, (0, col_i))) == nums for col_i in range(solution[0].len())) and \
             all(set(get_block(solution, (blk_row, blk_col))) == nums for blk_row in (0, 3, 6) for blk_col in (0, 3, 6)):
         return True
 
