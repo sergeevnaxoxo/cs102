@@ -1,5 +1,4 @@
 import pygame
-import argparse
 from pygame.locals import *
 
 from life import GameOfLife
